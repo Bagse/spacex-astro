@@ -1,0 +1,29 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { getLaunchBy } from "../../services/spacex";
+
+const { id } = Astro.params;
+
+let launch;
+if (id) {
+  launch = await getLaunchBy({ id });
+}
+---
+
+<Layout title={`Lanzamiento ${id}`}>
+  <article class="flex gap-4 justify-center flex-col md:flex-row items-center">
+    <img
+      class="w-52 h-auto"
+      src={launch?.links?.patch.small}
+      alt={launch?.name}
+    />
+    <div class="flex flex-col gap-y-3">
+      <h2 class="text-4xl text-white font-bold">
+        Launch #{launch?.flight_number}
+      </h2>
+      <h3>Name: {launch?.name}</h3>
+      <p class="text-lg w-80">{launch?.details}</p>
+      <p class="text-sm w-80 capitalize">Error Reason: {launch?.failures[0]?.reason}</p>
+    </div>
+  </article>
+</Layout>
